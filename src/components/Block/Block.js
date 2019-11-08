@@ -1,6 +1,5 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export default styled.button`
-  width: 200px;
-  height: 200px;
+export default styled.div`
+  position: relative;
 `;

@@ -1,20 +1,13 @@
 import React from "react";
+import DynamicSearch from "./modules/DynamicSearch";
 
 class App extends React.Component {
-  state = {
-    displayFlag: true
-  };
-
-  switchDisplay = () =>
-    this.setState({
-      displayFlag: !this.state.displayFlag
-    });
+  state = {};
 
   render = () => {
     return (
       <>
-        <button onClick={this.switchDisplay}>switchDisplay</button>
-        {this.state.displayFlag && <div>hello</div>}
+        <DynamicSearch />
       </>
     );
   };
