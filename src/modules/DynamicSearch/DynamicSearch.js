@@ -10,7 +10,7 @@ export default class DynamicSearch extends React.Component {
     inputValue: ''
   };
 
-  handleSearch = e => {
+  onSearch = e => {
     const data = [...this.state.data];
     const targetValue = e.target.value.toLowerCase();
 
@@ -24,7 +24,7 @@ export default class DynamicSearch extends React.Component {
     });
   };
 
-  handleFindedDelete = () => {
+  onFindedDelete = () => {
     this.setState({
       findedIndexes: [],
       inputValue: ''
@@ -37,17 +37,17 @@ export default class DynamicSearch extends React.Component {
 
   render() {
     const { data = [], findedIndexes = [], inputValue = '' } = this.state;
-    const { handleSearch, handleFindedDelete, dataOutput } = this;
+    const { onSearch, onFindedDelete, dataOutput } = this;
 
     const output =
       findedIndexes.length > 0 ? dataOutput(findedIndexes) : dataOutput(data);
 
     return (
       <>
-        <Input onChange={handleSearch} value={inputValue} />
+        <Input onChange={onSearch} value={inputValue} />
 
         <Button>find</Button>
-        <Button onClick={handleFindedDelete}>x</Button>
+        <Button onClick={onFindedDelete}>x</Button>
 
         <Block>{output}</Block>
       </>
