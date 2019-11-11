@@ -1,5 +1,4 @@
 import React from 'react';
-import DynamicSearch from 'modules/DynamicSearch';
 import Slider from 'modules/Slider';
 import Block from 'components/Block';
 
