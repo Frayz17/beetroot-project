@@ -11,25 +11,31 @@ const RootWrapper = styled(Block)`
 `;
 
 const ContentWrapper = styled(Block)`
-  overflow: hidden;
   height: 100%;
   width: ${({ slidesCount }) => `calc(100% * ${slidesCount})`};
   & > div {
-    float: left;
-    height: 100%
-    width: ${({ slideWidth = 100 }) => slideWidth + '%'};
+    overflow: hidden;
+    height: 100%;
+    // width: ${({ slidesCount }) => `calc(100% * ${slidesCount})`};
+    & > div {
+      float: left;
+      height: 100%
+      width: ${({ slideWidth = 100 }) => slideWidth + '%'};
+    }
   }
 `;
 
 export default class Slider extends React.Component {
   static defaultProps = {
     defaultSlide: 0,
+    defaultRow: 0,
     allowAnimate: true
   };
 
   state = {
     scrollX: 0,
-    currentSlide: this.props.defaultSlide
+    currentSlide: this.props.defaultSlide,
+    currentRow: this.props.defaultRow
   };
 
   slideTo = (slideIndex = 0) => e => {
@@ -50,13 +56,40 @@ export default class Slider extends React.Component {
         currentSlide: nextIndex
       });
     }
+  };
 
-    console.log(slideWidth, nextIndex);
+  switchRow = (rowIndex = 0) => () => {
+    const { currentRow = 0 } = this.state;
+    let { currentSlide } = this.state;
+    const { children } = this.props;
+
+    const rowsNumber = children.length;
+
+    const currentRowLength = children[currentRow].props.children.length;
+
+    console.log(currentRowLength);
+
+    if (rowIndex === currentRow) {
+      return;
+    }
+
+    const nextRow = currentRow < rowIndex ? currentRow + 1 : currentRow - 1;
+
+    if (nextRow >= 0 && nextRow <= rowsNumber - 1) {
+      this.setState({
+        currentRow: nextRow,
+        currentSlide:
+          currentSlide > currentRowLength ? currentRowLength : currentSlide
+      });
+    }
   };
 
   defineContentProps = () => {
     const { children = [] } = this.props;
-    const slidesCount = children.length || 1;
+    const { currentRow } = this.state;
+    const currentRowLength = children[currentRow].props.children.length;
+
+    const slidesCount = currentRowLength || 1;
     const slideWidth = +(100 / slidesCount).toFixed(2);
 
     return { slideWidth, slidesCount };
@@ -64,8 +97,8 @@ export default class Slider extends React.Component {
 
   render() {
     const { children = [], allowAnimate } = this.props;
-    const { scrollX = 0, currentSlide } = this.state;
-    const { slideTo } = this;
+    const { scrollX = 0, currentSlide, currentRow } = this.state;
+    const { slideTo, switchRow } = this;
 
     const style = {
       transform: `translate(-${scrollX}%,0px)`,
@@ -76,11 +109,13 @@ export default class Slider extends React.Component {
       <>
         <RootWrapper>
           <ContentWrapper {...this.defineContentProps()} style={style}>
-            {children}
+            {children[currentRow]}
           </ContentWrapper>
         </RootWrapper>
         <Button onClick={slideTo(currentSlide - 1)}>prev</Button>
         <Button onClick={slideTo(currentSlide + 1)}>next</Button>
+        <Button onClick={switchRow(currentRow - 1)}>up</Button>
+        <Button onClick={switchRow(currentRow + 1)}>down</Button>
       </>
     );
   }
