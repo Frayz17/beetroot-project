@@ -1,7 +1,7 @@
-import React from "react";
-import Button from "components/Button";
-import RootWrapper from "./RootWraper";
-import ContentWrapper from "./ContentWrapper";
+import React from 'react';
+import Button from 'components/Button';
+import RootWrapper from './RootWraper';
+import ContentWrapper from './ContentWrapper';
 
 export default class Slider extends React.Component {
   static defaultProps = {
@@ -35,6 +35,18 @@ export default class Slider extends React.Component {
     }
   }
   // ********************************************
+
+  handleAnimationStyle = (isAnimatedX, isAnimatedY) => {
+    const { scrollX, scrollY } = this.state;
+
+    if (isAnimatedX && isAnimatedY) {
+      return `translateX(-${scrollX}%) translateY(-${scrollY}%)`;
+    }
+
+    return isAnimatedX === true
+      ? `translateX(-${scrollX}%)`
+      : `translateY(-${scrollY}%)`;
+  };
 
   setSlideX = (nextIndex, slideWidth) => {
     this.setState({
@@ -85,7 +97,8 @@ export default class Slider extends React.Component {
       const nextSlidesLength = children[nextIndex].props.children.length;
       const currentSlidesLength = children[currentRow].props.children.length;
 
-      if (currentSlide > nextSlidesLength) {
+      // these ifs check different conditions between rows with different lengths
+      if (currentSlide > nextSlidesLength - 1) {
         const { slideWidth } = this.defineContentProps();
         this.setState({
           scrollX: slideWidth * nextSlidesLength,
@@ -93,15 +106,20 @@ export default class Slider extends React.Component {
         });
       } else if (currentSlidesLength < nextSlidesLength) {
         this.setState({
-          scrollX: (100 / nextSlidesLength) * currentSlide
+          scrollX: calcScrollX(nextSlidesLength, currentSlide)
         });
-      } else {
+      } /*if (currentSlidesLength > nextSlidesLength)*/ else {
         this.setState({
-          scrollX: (100 / nextSlidesLength) * currentSlide
+          scrollX: calcScrollX(nextSlidesLength, currentSlide)
         });
-      }
+      } // end ifs check
 
       this.setSlideY(nextIndex);
+
+      //  =======================
+      function calcScrollX(nextSlidesLength, currentSlide) {
+        return (100 / nextSlidesLength) * currentSlide;
+      }
     }
   };
 
@@ -117,12 +135,19 @@ export default class Slider extends React.Component {
 
   render() {
     const { children = [], allowAnimate } = this.props;
-    const { scrollX = 0, scrollY = 0, currentSlide, currentRow } = this.state;
-    const { slideToX, slideToY } = this;
+    const {
+      scrollX = 0,
+      scrollY = 0,
+      currentSlide,
+      currentRow,
+      isAnimatedX,
+      isAnimatedY
+    } = this.state;
+    const { slideToX, slideToY, handleAnimationStyle } = this;
 
     const style = {
-      transform: `translate(-${scrollX}%,-${scrollY}%)`,
-      transition: `${allowAnimate ? "ease .2s all" : null}`
+      transform: handleAnimationStyle(isAnimatedX, isAnimatedY),
+      transition: `${allowAnimate ? 'ease .2s all' : null}`
     };
 
     return (
