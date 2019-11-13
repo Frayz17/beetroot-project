@@ -1,7 +1,8 @@
 import React from "react";
 import Button from "components/Button";
-import RootWrapper from "./RootWraper";
-import ContentWrapper from "./ContentWrapper";
+import RootWrapper from "./view/RootWraper";
+import HorizontalWrapper from "./view/HorizontalWrapper";
+import VerticalWrapper from "./view/VerticalWrapper";
 
 export default class Slider extends React.Component {
   static defaultProps = {
@@ -14,13 +15,15 @@ export default class Slider extends React.Component {
     scrollX: 0,
     scrollY: 0,
     currentSlide: this.props.defaultSlide,
-    currentRow: this.props.defaultRow
+    currentRow: this.props.defaultRow,
+    isAnimatedX: true
   };
 
   setSlideX = (nextIndex, slideWidth) => {
     this.setState({
       scrollX: slideWidth * nextIndex,
-      currentSlide: nextIndex
+      currentSlide: nextIndex,
+      isAnimatedX: true
     });
   };
 
@@ -67,19 +70,23 @@ export default class Slider extends React.Component {
       const currentSlidesLength = children[currentRow].props.children.length;
 
       // these ifs check different conditions between rows with different lengths
+      // and sets X axis for slide according to position from previos row
       if (currentSlide > nextSlidesLength - 1) {
         const { slideWidth } = this.defineContentProps();
         this.setState({
           scrollX: slideWidth * nextSlidesLength,
-          currentSlide: nextSlidesLength - 1
+          currentSlide: nextSlidesLength - 1,
+          isAnimatedX: false
         });
       } else if (currentSlidesLength < nextSlidesLength) {
         this.setState({
-          scrollX: calcScrollX(nextSlidesLength, currentSlide)
+          scrollX: calcScrollX(nextSlidesLength, currentSlide),
+          isAnimatedX: false
         });
       } else if (currentSlidesLength > nextSlidesLength) {
         this.setState({
-          scrollX: calcScrollX(nextSlidesLength, currentSlide)
+          scrollX: calcScrollX(nextSlidesLength, currentSlide),
+          isAnimatedX: false
         });
       } // end ifs check
 
@@ -104,20 +111,38 @@ export default class Slider extends React.Component {
 
   render() {
     const { children = [], allowAnimate } = this.props;
-    const { currentSlide, currentRow, scrollX, scrollY } = this.state;
+    const {
+      currentSlide,
+      currentRow,
+      scrollX,
+      scrollY,
+      isAnimatedX
+    } = this.state;
     const { slideToX, slideToY } = this;
 
-    const style = {
-      transform: `translateX(-${scrollX}%) translateY(-${scrollY}%)`,
+    const styleVertical = {
+      transform: `translateY(-${scrollY}%)`,
       transition: `${allowAnimate ? "ease .2s transform" : "none"}`
+    };
+
+    const styleHorizontal = {
+      transform: `translateX(-${scrollX}%)`,
+      transition: `${
+        allowAnimate && isAnimatedX ? "ease .2s transform" : "none"
+      }`
     };
 
     return (
       <>
         <RootWrapper>
-          <ContentWrapper {...this.defineContentProps()} style={style}>
-            {children}
-          </ContentWrapper>
+          <VerticalWrapper style={styleVertical}>
+            <HorizontalWrapper
+              {...this.defineContentProps()}
+              style={styleHorizontal}
+            >
+              {children}
+            </HorizontalWrapper>
+          </VerticalWrapper>
         </RootWrapper>
         <Button onClick={slideToX(currentSlide - 1)}>prev</Button>
         <Button onClick={slideToX(currentSlide + 1)}>next</Button>
