@@ -1,11 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
-// import photos from './photos';
-// import phopoststos from './posts';
-// import users from './users';
-// import comments from './comments';
-
 let Store = null;
 
 export const newStore = (reducers = {}, middleware) => {

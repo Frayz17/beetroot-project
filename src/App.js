@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Block from 'components/Block';
-// import { getState } from 'Services/Store';
 
 class App extends React.Component {
   render = () => {

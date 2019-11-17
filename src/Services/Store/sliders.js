@@ -24,7 +24,9 @@ export default (
       currentSlide: 0
     }
   },
-  { type = '', payload = {} } => {
+  { type = '', payload = {} }
+) => {
+  const { sliderName = '', sliderIndex = 0 } = payload;
   switch (type) {
     case 'SLIDE_X':
       state[sliderName].currentSlide = sliderIndex;
