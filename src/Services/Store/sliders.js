@@ -4,8 +4,14 @@ export default (
   state = {
     main: {
       slides: [
-        [{ title: 'first' }, { title: 'second' }],
-        [{ title: 'third' }, { title: 'fourth' }]
+        [
+          { title: 'first', backgroundColor: 'red' },
+          { title: 'second', backgroundColor: 'green' }
+        ],
+        [
+          { title: 'third', backgroundColor: 'yellow' },
+          { title: 'fourth', backgroundColor: 'coral' }
+        ]
       ],
       currentRow: 0,
       currentSlide: 0,

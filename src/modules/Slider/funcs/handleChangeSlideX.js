@@ -6,7 +6,7 @@ export default (currentStore = {}, slideIndex) => {
   }
 
   const nextIndex =
-    currentSlide < nextIndex ? currentSlide + 1 : currentSlide - 1;
+    currentSlide < slideIndex ? currentSlide + 1 : currentSlide - 1;
 
   const slidesCount = slides[currentRow].length || 1;
   const slideWidth = +(100 / slidesCount).toFixed(2);

@@ -1,5 +1,6 @@
 import { newStore, getStore, getState } from './Store.js';
 
+import sliders from './sliders';
 import users from './users';
 import posts from './posts';
 import comments from './comments';

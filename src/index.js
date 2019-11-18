@@ -7,6 +7,7 @@ import {
   photos,
   comments,
   posts,
+  sliders,
   StoreProvider
 } from 'Services/Store';
 
