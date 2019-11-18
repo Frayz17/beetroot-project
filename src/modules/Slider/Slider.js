@@ -1,11 +1,14 @@
-import React from "react";
-import Button from "components/Button";
-import RootWrapper from "./view/RootWraper";
-import HorizontalWrapper from "./view/HorizontalWrapper";
-import VerticalWrapper from "./view/VerticalWrapper";
+import React from 'react';
+import { connect } from 'react-redux';
+import { getStore } from 'Services/Store';
+import Button from 'components/Button';
+import RootWrapper from './view/RootWraper';
+import HorizontalWrapper from './view/HorizontalWrapper';
+import VerticalWrapper from './view/VerticalWrapper';
 
 export default class Slider extends React.Component {
   static defaultProps = {
+    name: '',
     defaultSlide: 0,
     defaultRow: 0,
     allowAnimate: true
@@ -19,38 +22,14 @@ export default class Slider extends React.Component {
     isAnimatedX: true
   };
 
-  setSlideX = (nextIndex, slideWidth) => {
-    this.setState({
-      scrollX: slideWidth * nextIndex,
-      currentSlide: nextIndex,
-      isAnimatedX: true
+  slideToX = (slideIndex = this.defaultProps.defaultSlide) => e => {
+    getStore().dispatch({
+      type: 'SLIDE_TO_X',
+      payload: {
+        sliderName: this.props.name,
+        slideIndex
+      }
     });
-  };
-
-  setSlideY = nextIndex => {
-    this.setState({
-      scrollY: 100 * nextIndex,
-      currentRow: nextIndex
-    });
-  };
-
-  setNextIndex = (currentSlide, nextIndex) => {
-    return currentSlide < nextIndex ? currentSlide + 1 : currentSlide - 1;
-  };
-
-  slideToX = (slideIndex = 0) => e => {
-    const { currentSlide = 0 } = this.state;
-
-    if (slideIndex === currentSlide) {
-      return;
-    }
-
-    const nextIndex = this.setNextIndex(currentSlide, slideIndex);
-    const { slideWidth, slidesCount } = this.defineContentProps();
-
-    if (nextIndex >= 0 && nextIndex <= slidesCount - 1) {
-      this.setSlideX(nextIndex, slideWidth);
-    }
   };
 
   slideToY = (rowIndex = 0) => e => {
@@ -99,36 +78,39 @@ export default class Slider extends React.Component {
     }
   };
 
-  defineContentProps = () => {
-    const { children = [] } = this.props;
-    const { currentRow } = this.state;
+  // defineContentProps = () => {
+  //   const { children = [] } = this.props;
+  //   const { currentRow } = this.state;
 
-    const slidesCount = children[currentRow].props.children.length || 1;
-    const slideWidth = +(100 / slidesCount).toFixed(2);
+  //   const slidesCount = children[currentRow].props.children.length || 1;
+  //   const slideWidth = +(100 / slidesCount).toFixed(2);
 
-    return { slideWidth, slidesCount };
-  };
+  //   return { slideWidth, slidesCount };
+  // };
 
   render() {
-    const { children = [], allowAnimate } = this.props;
     const {
-      currentSlide,
-      currentRow,
-      scrollX,
-      scrollY,
-      isAnimatedX
-    } = this.state;
+      slides = [],
+      allowAnimate = true,
+      currentSlide = 0,
+      currentRow = 0,
+      scrollX = 0,
+      scrollY = 0
+    } = this.props;
     const { slideToX, slideToY } = this;
+
+    const slidesCount = slides[currentRow].props.children.length || 1;
+    const slideWidth = +(100 / slidesCount).toFixed(2);
 
     const styleVertical = {
       transform: `translateY(-${scrollY}%)`,
-      transition: `${allowAnimate ? "ease .2s transform" : "none"}`
+      transition: `${allowAnimate ? 'ease .2s transform' : 'none'}`
     };
 
     const styleHorizontal = {
       transform: `translateX(-${scrollX}%)`,
       transition: `${
-        allowAnimate && isAnimatedX ? "ease .2s transform" : "none"
+        allowAnimate && isAnimatedX ? 'ease .2s transform' : 'none'
       }`
     };
 
@@ -136,11 +118,14 @@ export default class Slider extends React.Component {
       <>
         <RootWrapper>
           <VerticalWrapper style={styleVertical}>
-            <HorizontalWrapper
-              {...this.defineContentProps()}
-              style={styleHorizontal}
-            >
-              {children}
+            <HorizontalWrapper slideWidth={slideWidth} style={styleHorizontal}>
+              {slides.map(({ style = {}, title = 'noname' }, i) => {
+                return (
+                  <Block key={i} style={style}>
+                    {title}
+                  </Block>
+                );
+              })}
             </HorizontalWrapper>
           </VerticalWrapper>
         </RootWrapper>
@@ -152,3 +137,9 @@ export default class Slider extends React.Component {
     );
   }
 }
+
+export default connect((state, { name = '' }) => {
+  return {
+    ...state.sliders[name]
+  };
+})(Slider);
