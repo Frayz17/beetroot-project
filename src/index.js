@@ -1,20 +1,16 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App.js';
-import {
-  newStore,
-  users,
-  photos,
-  comments,
-  posts,
-  StoreProvider
-} from 'Services/Store';
+import { posts, newStore, StoreProvider } from 'Services/Store';
 
-newStore({ users, posts, comments, photos, sliders });
+newStore({ posts });
 
 ReactDom.render(
   <StoreProvider>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </StoreProvider>,
   document.getElementById('root')
 );

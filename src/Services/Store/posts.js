@@ -1,3 +1,3 @@
-export default (state = { posts: 'posts' }, action) => {
-  return { ...state };
+export default (state = [], action) => {
+  return [...state];
 };

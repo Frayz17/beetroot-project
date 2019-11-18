@@ -1,21 +1,51 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Block from 'components/Block';
-import Slider from 'modules/Slider';
+import { Switch, Route, Link } from 'react-router-dom';
+import Menu from 'modules/Menu';
+import Home from 'routes/Home';
+import Posts from 'routes/Posts';
+import SignIn from 'routes/SignIn';
 
-class App extends React.Component {
-  render = () => {
-    return (
-      <>
-        <Block>{this.props.name}</Block>
-        <Slider name="main" />
-      </>
-    );
-  };
-}
+export default React.memo(() => (
+  <>
+    <Menu />
+    <Switch>
+      <Route path="/posts">
+        <Posts />
+      </Route>
+      <Route path="/sign-in">
+        <SignIn />
+      </Route>
+      <Route path="/">
+        <Home />
+      </Route>
+    </Switch>
+  </>
+));
 
-export default connect((state, props) => {
-  return {
-    name: state.users.name
-  };
-})(App);
+// class App extends React.Component {
+//   render = () => {
+//     return (
+//       <>
+//         <Menu />
+//         <Switch>
+//           <Route path="/posts">
+//             <Posts />
+//           </Route>
+//           <Route path="/sign-in">
+//             <SignIn />
+//           </Route>
+//           <Route path="/">
+//             <Home />
+//           </Route>
+//         </Switch>
+//       </>
+//     );
+//   };
+// }
+
+// export default connect((state, props) => {
+//   return {
+//     // name: state.users.name
+//   };
+// })(App);
