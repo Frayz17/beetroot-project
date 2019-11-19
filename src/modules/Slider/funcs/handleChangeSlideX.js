@@ -1,9 +1,6 @@
 export default (currentStore = {}, slideIndex) => {
   const { currentSlide = 0, slides = [], currentRow = 0 } = currentStore;
 
-  console.log('slideIndex', slideIndex);
-  console.log('currentSlide', currentSlide);
-
   if (slideIndex === currentSlide) {
     return currentStore;
   }

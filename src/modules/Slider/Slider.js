@@ -52,9 +52,6 @@ class Slider extends React.Component {
     const slidesCount = slides[currentRow].length || 1;
     const slideWidth = +(100 / slidesCount).toFixed(2);
 
-    // console.log('slideWidth', slideWidth);
-    // console.log('slidesCount', slidesCount);
-
     const styleVertical = {
       transform: `translateY(-${scrollY}%)`,
       transition: `${allowAnimate ? 'ease .2s transform' : 'none'}`
@@ -74,8 +71,7 @@ class Slider extends React.Component {
             <HorizontalWrapper
               slidesCount={slidesCount}
               slideWidth={slideWidth}
-              style={styleHorizontal}
-            >
+              style={styleHorizontal}>
               {slides.map((row, i) => {
                 return (
                   <Block key={i}>

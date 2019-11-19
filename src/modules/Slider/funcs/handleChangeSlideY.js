@@ -1,19 +1,9 @@
-// setSlideY = nextIndex => {
-//   this.setState({
-//     scrollY: 100 * nextIndex,
-//     currentRow: nextIndex
-//   });
-// };
+function calcScrollX(nextSlidesLength, currentSlide) {
+  return +((100 / nextSlidesLength) * currentSlide).toFixed(2);
+}
 
 export default (currentStore = {}, rowIndex = 0) => {
-  const {
-    slides = [],
-    currentRow = 0,
-    currentSlide
-    // scrollX,
-    // scrollY,
-    // isAnimatedX
-  } = currentStore;
+  const { slides = [], currentRow = 0, currentSlide } = currentStore;
   const totalRows = slides.length || 0;
 
   if (rowIndex === currentRow) {
@@ -29,13 +19,10 @@ export default (currentStore = {}, rowIndex = 0) => {
     // these ifs check different conditions between rows with different lengths
     // and sets X axis for slide according to position from previos row
     if (currentSlide > nextSlidesLength - 1) {
-      const slidesCount = slides[currentRow].length || 1;
-      const slideWidth = +(100 / slidesCount).toFixed(2);
-
       return {
         ...currentStore,
         currentRow: nextIndex,
-        scrollX: slideWidth * nextSlidesLength,
+        scrollX: calcScrollX(nextSlidesLength, nextSlidesLength - 1),
         currentSlide: nextSlidesLength - 1,
         scrollY: 100 * nextIndex,
         isAnimatedX: false
@@ -45,9 +32,7 @@ export default (currentStore = {}, rowIndex = 0) => {
         ...currentStore,
         currentRow: nextIndex,
         scrollX: calcScrollX(nextSlidesLength, currentSlide),
-
         scrollY: 100 * nextIndex,
-
         isAnimatedX: false
       };
     } else if (currentSlidesLength > nextSlidesLength) {
@@ -65,11 +50,6 @@ export default (currentStore = {}, rowIndex = 0) => {
       scrollY: 100 * nextIndex,
       currentRow: nextIndex
     };
-
-    //  =======================
-    function calcScrollX(nextSlidesLength, currentSlide) {
-      return +((100 / nextSlidesLength) * currentSlide).toFixed(2);
-    }
   }
 
   return currentStore;
