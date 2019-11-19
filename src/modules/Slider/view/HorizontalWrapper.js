@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import Block from "components/Block";
+import styled from 'styled-components';
+import Block from 'components/Block';
 
 const HorizontalWrapper = styled(Block)`
   height: 100%;
@@ -10,7 +10,7 @@ const HorizontalWrapper = styled(Block)`
     & > div {
       float: left;
       height: 100%
-      width: ${({ slideWidth = 100 }) => slideWidth + "%"}; 
+      width: ${({ slideWidth = 100 }) => slideWidth + '%'}; 
     }
   }
 `;

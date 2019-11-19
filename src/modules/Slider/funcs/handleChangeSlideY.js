@@ -34,20 +34,28 @@ export default (currentStore = {}, rowIndex = 0) => {
 
       return {
         ...currentStore,
+        currentRow: nextIndex,
         scrollX: slideWidth * nextSlidesLength,
         currentSlide: nextSlidesLength - 1,
+        scrollY: 100 * nextIndex,
         isAnimatedX: false
       };
     } else if (currentSlidesLength < nextSlidesLength) {
       return {
         ...currentStore,
+        currentRow: nextIndex,
         scrollX: calcScrollX(nextSlidesLength, currentSlide),
+
+        scrollY: 100 * nextIndex,
+
         isAnimatedX: false
       };
     } else if (currentSlidesLength > nextSlidesLength) {
       return {
         ...currentStore,
         scrollX: calcScrollX(nextSlidesLength, currentSlide),
+        scrollY: 100 * nextIndex,
+        currentRow: nextIndex,
         isAnimatedX: false
       };
     } // end ifs check

@@ -15,7 +15,9 @@ class Slider extends React.Component {
     allowAnimate: true
   };
 
-  slideToX = (slideIndex = this.defaultProps.defaultSlide) => e => {
+  slideToX = (slideIndex = this.props.defaultSlide) => e => {
+    console.log();
+
     getStore().dispatch({
       type: 'SLIDE_TO_X',
       payload: {
@@ -35,16 +37,6 @@ class Slider extends React.Component {
     });
   };
 
-  // defineContentProps = () => {
-  //   const { children = [] } = this.props;
-  //   const { currentRow } = this.state;
-
-  //   const slidesCount = children[currentRow].props.children.length || 1;
-  //   const slideWidth = +(100 / slidesCount).toFixed(2);
-
-  //   return { slideWidth, slidesCount };
-  // };
-
   render() {
     const {
       slides = [],
@@ -59,6 +51,9 @@ class Slider extends React.Component {
 
     const slidesCount = slides[currentRow].length || 1;
     const slideWidth = +(100 / slidesCount).toFixed(2);
+
+    // console.log('slideWidth', slideWidth);
+    // console.log('slidesCount', slidesCount);
 
     const styleVertical = {
       transform: `translateY(-${scrollY}%)`,
@@ -75,23 +70,27 @@ class Slider extends React.Component {
     return (
       <>
         <RootWrapper>
-          {slides.map((row, i) => {
-            return (
-              <VerticalWrapper style={styleVertical}>
-                {row.map((item, ii) => {
-                  return (
-                    <HorizontalWrapper
-                      slideWidth={slideWidth}
-                      style={styleHorizontal}>
-                      <Block key={ii} style={item.style}>
-                        {item.title}
-                      </Block>
-                    </HorizontalWrapper>
-                  );
-                })}
-              </VerticalWrapper>
-            );
-          })}
+          <VerticalWrapper style={styleVertical}>
+            <HorizontalWrapper
+              slidesCount={slidesCount}
+              slideWidth={slideWidth}
+              style={styleHorizontal}
+            >
+              {slides.map((row, i) => {
+                return (
+                  <Block key={i}>
+                    {row.map((item, ii) => {
+                      return (
+                        <Block key={ii} style={item.style}>
+                          {item.title}
+                        </Block>
+                      );
+                    })}
+                  </Block>
+                );
+              })}
+            </HorizontalWrapper>
+          </VerticalWrapper>
         </RootWrapper>
         <Button onClick={slideToX(currentSlide - 1)}>prev</Button>
         <Button onClick={slideToX(currentSlide + 1)}>next</Button>
