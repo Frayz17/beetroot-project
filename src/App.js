@@ -1,6 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Menu from 'modules/Menu';
 import Home from 'routes/Home';
 import Posts from 'routes/Posts';
@@ -48,4 +47,4 @@ export default React.memo(() => (
 //   return {
 //     // name: state.users.name
 //   };
-// })(App);
+// })(App)

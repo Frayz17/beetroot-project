@@ -1,43 +1,57 @@
 import React from 'react';
+import { getState } from 'Services/Store';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { BlockFlex } from 'components/Block';
 import { ButtonLink } from 'components/Button';
-import { connect } from 'http2';
+import { withRouter } from 'react-router-dom';
+import Typography from 'components/Typography';
 
 const StyledBlockFlex = styled(BlockFlex)`
-  alignItems: 'center',
-  justifyContent: 'space-between'
+  align-items: center;
+  justify-content: space-between;
 
   @media screen and (max-width: 576px) {
   }
 `;
 
-export default connect(state => {
-  return {
-    link: state.nav || {} || ''
-  };
-})(
-  React.memo(({ link }) => {
-    const mainCheck = link === '/';
+export default withRouter(
+  connect(state => {
+    return {
+      // link: state.nav || {} || ''
+    };
+  })(
+    React.memo(({ history }) => {
+      const {
+        nav: { links = [] }
+      } = getState();
 
-    return (
-      <StyledBlockFlex>
-        <ButtonLink
-          to="/"
-          disabled={mainCheck}
-          style={
-            mainCheck
-              ? {
-                  color: 'red'
+      return (
+        <StyledBlockFlex>
+          {links.map(({ path = '/', title = 'noname' }, i) => {
+            const isActiveFlag = history.location.pathname === path;
+
+            return (
+              <ButtonLink
+                key={i}
+                to={path}
+                disabled={isActiveFlag}
+                style={
+                  isActiveFlag
+                    ? {
+                        color: 'blue'
+                      }
+                    : {
+                        color: 'green'
+                      }
                 }
-              : {
-                  color: 'green'
-                }
-          }
-        >
-          <Typography>Main</Typography>
-        </ButtonLink>
-      </StyledBlockFlex>
-    );
-  })
+              >
+                <Typography>{title}</Typography>
+              </ButtonLink>
+            );
+          })}
+        </StyledBlockFlex>
+      );
+    })
+  )
 );

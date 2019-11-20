@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.js';
-import { posts, newStore, StoreProvider } from 'Services/Store';
+import { posts, newStore, StoreProvider, nav } from 'Services/Store';
 
-newStore({ posts });
+newStore({ posts, nav });
 
 ReactDom.render(
   <StoreProvider>
