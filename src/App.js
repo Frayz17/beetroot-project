@@ -22,27 +22,6 @@ export default React.memo(() => (
   </>
 ));
 
-// class App extends React.Component {
-//   render = () => {
-//     return (
-//       <>
-//         <Menu />
-//         <Switch>
-//           <Route path="/posts">
-//             <Posts />
-//           </Route>
-//           <Route path="/sign-in">
-//             <SignIn />
-//           </Route>
-//           <Route path="/">
-//             <Home />
-//           </Route>
-//         </Switch>
-//       </>
-//     );
-//   };
-// }
-
 // export default connect((state, props) => {
 //   return {
 //     // name: state.users.name
