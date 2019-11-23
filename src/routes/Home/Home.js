@@ -8,7 +8,6 @@ export default connect((state, props) => {
   };
 })(
   React.memo(({ history }) => {
-    console.log(history);
     return <b>Home Page</b>;
   })
 );
