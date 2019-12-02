@@ -1,0 +1,23 @@
+[
+{{#repeat 8}}
+{
+ "id": {{ @index }},
+ "title": "{{ title }}",
+ "text": "{{lorem 20}}",
+ "created_at": "{{now 'YYYY-MM-DD'}}",
+ "likes": {{int 0 100}},
+ "dislikes": {{int 0 100}},
+    "img": "https://picsum.photos/id/{{int 0 100 }}/400/400.jpg",
+ "comments": [
+     {{#repeat 23}}
+        {
+            "id": {{ @index }},
+            "name": "{{ firstName }} {{ lastName }}",
+            "text": "{{lorem 11}}",
+            "created_at": "{{now 'YYYY-MM-DD'}}"
+        }
+     {{/ repeat }}
+     ]
+}
+{{/ repeat}}
+]

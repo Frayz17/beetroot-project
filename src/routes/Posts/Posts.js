@@ -4,16 +4,33 @@ import Post from 'modules/Post';
 import { TypographyHeader } from 'components/Typography';
 import loadPosts from './loadPosts.js';
 
+// const pagesNumber = 4;
+// let pageNumber = 1;
+
 export default connect((state) => {
   return {
-    postsLength: (state.posts || []).length || 0
+    postsLength: (state.posts || []).length || 0,
+    page
   };
 })(
   React.memo(({ postsLength }) => {
     // onMount
     React.useEffect(() => {
-      loadPosts();
+      loadPosts(pageNumber);
     }, []);
+
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      pageNumber++;
+    }
+
+    console.log(
+      'document.documentElement.scrollTop',
+      document.documentElement.scrollTop
+    );
+    console.log('window.innerHeight', window.innerHeight);
 
     return (
       <>
