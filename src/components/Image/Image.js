@@ -5,49 +5,80 @@ import Block from 'components/Block';
 const Component = styled.img`
   display: block;
 `;
-
 let index = 0;
-export default React.memo(({ preloaderSrc = '', src = '', ...props }) => {
-  const [isLoadedFlag, setLoadedFlag] = React.useState(false);
-  const imgRef = React.useRef(null);
-  const listener = (e) => {
-    const img = new Image();
+let count = 0;
 
-    img.src = src;
-    img.onload = () => {
-      setLoadedFlag(true);
-    };
+const listener = nowIndex => e => {
+  if (
+    count > index &&
+    (index === nowIndex || ((e || {}).detail || {}).newIndex === index)
+  ) {
+    const currentIndex = index;
 
+    index++;
+    setTimeout(() => {
+      const img = new Image();
+
+      img.src = cahcedData[currentIndex].src;
+      img.onload = () => {
+        cahcedData[currentIndex].setLoadedFlag(true);
+        dispatchNextImg(currentIndex);
+      };
+      img.onerror = () => {
+        dispatchNextImg(currentIndex);
+        console.log('src', cahcedData[currentIndex].src);
+      };
+    }, 0);
+  }
+};
+const dispatchNextImg = currentIndex => {
+  setTimeout(() => {
     document.dispatchEvent(
       new CustomEvent('onImgLoaded', {
         detail: {
-          newIndex: ++index
+          newIndex: index
         }
       })
     );
-  };
-
-  // onMount
-  React.useEffect(() => {
-    document.addEventListener('onImgLoaded', listener);
-  }, []);
-
-  // on
-  React.useEffect(
-    () => () => {
-      document.removeEventListener('onImgLoaded', listener);
-    },
-    []
-  );
-
-  console.log('isLoadedFlag', isLoadedFlag);
-  return isLoadedFlag ? (
-    <Component ref={imgRef} src={src} {...props} />
-  ) : (
-    <Preloader src={preloaderSrc} />
-  );
-});
+    delete cahcedData[currentIndex];
+    if (count - 1 === currentIndex) {
+      cahcedData = {};
+      index = 0;
+      count = 0;
+    }
+  }, 0);
+};
+let cahcedData = {};
 
 const Preloader = React.memo(({ preloaderSrc = '' }) => {
   return <Block>Loading</Block>;
+});
+
+export default React.memo(({ preloaderSrc = '', src = '', ...props }) => {
+  const [isLoadedFlag, setLoadedFlag] = React.useState(false);
+  const eventListener = listener();
+
+  if (!isLoadedFlag) {
+    cahcedData[count] = {
+      setLoadedFlag,
+      src
+    };
+    count++;
+  }
+
+  // onMount
+  React.useEffect(() => {
+    if (!isLoadedFlag) {
+      if (index === 0) {
+        listener(0)();
+        document.addEventListener('onImgLoaded', eventListener);
+      }
+    }
+  }, [src, isLoadedFlag, eventListener]);
+
+  return isLoadedFlag ? (
+    <Component src={src} {...props} />
+  ) : (
+    <Preloader src={preloaderSrc} />
+  );
 });
