@@ -5,8 +5,6 @@ export default (
   },
   action
 ) => {
-  console.log('reducer s  page', action.payload);
-
   switch (action.type) {
     case 'SET_POSTS':
       return { data: [...action.payload.data], page: action.payload.page };
@@ -15,6 +13,11 @@ export default (
         ...state,
         data: [...state.data, ...action.payload.data],
         page: action.payload.page
+      };
+    case 'RESET_POSTS':
+      return {
+        data: [],
+        page: 1
       };
     default:
       return { ...state };
