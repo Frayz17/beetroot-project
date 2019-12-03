@@ -5,14 +5,18 @@ export default (
   },
   action
 ) => {
+  console.log('reducer s  page', action.payload);
+
   switch (action.type) {
     case 'SET_POSTS':
-      return {data: ...action.payload, page: 1};
+      return { data: [...action.payload.data], page: action.payload.page };
     case 'MERGE_POSTS':
-      return {...state, data: ...action.payload, page};
-    case 'NEXT_PAGE':
-      return {...state, page: action.payload};
+      return {
+        ...state,
+        data: [...state.data, ...action.payload.data],
+        page: action.payload.page
+      };
     default:
-      return {...state};
+      return { ...state };
   }
 };

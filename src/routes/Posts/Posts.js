@@ -3,34 +3,40 @@ import { connect } from 'react-redux';
 import Post from 'modules/Post';
 import { TypographyHeader } from 'components/Typography';
 import loadPosts from './loadPosts.js';
+import { getState } from 'Services/Store';
 
-// const pagesNumber = 4;
-// let pageNumber = 1;
+const routesNumber = 3;
 
-export default connect((state) => {
+export default connect(state => {
   return {
-    postsLength: (state.posts || []).length || 0,
-    page
+    postsLength: (state.posts.data || []).length || 0
   };
 })(
   React.memo(({ postsLength }) => {
+    let { page } = getState().posts;
+
+    console.log('Posts  State page', page);
+
+    const handleLoad = () => {
+      const offsetHeight = document.documentElement.offsetHeight;
+      const innerHeight = window.innerHeight;
+      const scrollTop = document.documentElement.scrollTop;
+
+      if (
+        offsetHeight > innerHeight &&
+        innerHeight + scrollTop === offsetHeight
+      ) {
+        if (page <= routesNumber) {
+          loadPosts(++page);
+        }
+      }
+    };
+
     // onMount
     React.useEffect(() => {
-      loadPosts(pageNumber);
-    }, []);
-
-    if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
-    ) {
-      pageNumber++;
-    }
-
-    console.log(
-      'document.documentElement.scrollTop',
-      document.documentElement.scrollTop
-    );
-    console.log('window.innerHeight', window.innerHeight);
+      loadPosts(page);
+      window.addEventListener('scroll', handleLoad);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
       <>

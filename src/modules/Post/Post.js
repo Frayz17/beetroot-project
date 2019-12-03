@@ -5,7 +5,7 @@ import Typography from 'components/Typography';
 import Image from 'components/Image';
 
 export default connect((state, { index = 0 }) => {
-  const { comments, ...rest } = (state.posts || [])[index];
+  const { comments, ...rest } = (state.posts.data || [])[index];
 
   return rest;
 })(
