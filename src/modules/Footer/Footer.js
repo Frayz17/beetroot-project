@@ -17,10 +17,10 @@ import {
 } from './styles';
 
 export default React.memo(() => {
-  const [isMapOpenFlag, setisMapOpenFlag] = React.useState(false);
+  const [isMapOpenFlag, setIsMapOpenFlag] = React.useState(false);
 
   const onMapCall = () => {
-    setisMapOpenFlag(!isMapOpenFlag);
+    setIsMapOpenFlag(!isMapOpenFlag);
   };
 
   return (

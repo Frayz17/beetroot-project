@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Block, { BlockFlex } from 'components/Block';
 import { ButtonLink } from 'components/Button';
-import { withRouter } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Typography from 'components/Typography';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
+import isLinkActive from './isLinkActive';
 
 import onDisplayMenu from './onDisplayMenu';
 
@@ -46,65 +47,54 @@ const StyledButton = styled(Button)`
   }
 `;
 
-export default withRouter(
-  connect((state) => {
-    return {
-      displayMenuFlag: (state.menu || {}).displayMenuFlag || false
-    };
-  })(
-    React.memo(
-      ({
-        history,
-        displayMenuFlag,
-        styleMenuBlock = {},
-        styleLinksContainer = {},
-        styleLinkItems = {},
-        isBurgerNeed = true
-      }) => {
-        const {
-          nav: { links = [] }
-        } = getState();
+export default connect((state) => {
+  return {
+    displayMenuFlag: (state.menu || {}).displayMenuFlag || false
+  };
+})(
+  React.memo(
+    ({
+      displayMenuFlag,
+      styleMenuBlock = {},
+      styleLinksContainer = {},
+      styleLinkItems = {},
+      isBurgerNeed = true
+    }) => {
+      const {
+        nav: { links = [] }
+      } = getState();
 
-        return (
-          <MenuBlock style={styleMenuBlock}>
-            <StyledBlockFlex
-              style={styleLinksContainer}
-              displayMenuFlag={displayMenuFlag}
-            >
-              {links.map(({ path = '/', title = 'noname' }, i) => {
-                const isActiveFlag = history.location.pathname === path;
+      const location = useLocation();
 
-                return (
-                  <ButtonLink
-                    key={i}
-                    to={path}
-                    disabled={isActiveFlag}
-                    style={
-                      isActiveFlag
-                        ? {
-                            color: 'blue',
-                            ...styleLinkItems
-                          }
-                        : {
-                            color: 'green',
-                            ...styleLinkItems
-                          }
-                    }
-                  >
-                    <Typography>{title}</Typography>
-                  </ButtonLink>
-                );
-              })}
-            </StyledBlockFlex>
+      return (
+        <MenuBlock style={styleMenuBlock}>
+          <StyledBlockFlex
+            style={styleLinksContainer}
+            displayMenuFlag={displayMenuFlag}
+          >
+            {links.map(({ path = '/', title = 'noname' }, i) => {
+              const isActiveFlag = location.pathname === path;
 
-            {isBurgerNeed && (
-              <StyledButton onClick={onDisplayMenu}>
-                <Icon name={displayMenuFlag ? 'times' : 'bars'} />
-              </StyledButton>
-            )}
-          </MenuBlock>
-        );
-      }
-    )
+              return (
+                <ButtonLink
+                  key={i}
+                  to={path}
+                  disabled={isActiveFlag}
+                  style={isLinkActive(isActiveFlag, styleLinkItems)}
+                >
+                  <Typography>{title}</Typography>
+                </ButtonLink>
+              );
+            })}
+          </StyledBlockFlex>
+
+          {isBurgerNeed && (
+            <StyledButton onClick={onDisplayMenu}>
+              <Icon name={displayMenuFlag ? 'times' : 'bars'} />
+            </StyledButton>
+          )}
+        </MenuBlock>
+      );
+    }
   )
 );

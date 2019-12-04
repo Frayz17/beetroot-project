@@ -3,7 +3,6 @@ import Block from 'components/Block';
 
 const Footer = styled(Block)`
   display: flex;
-  // flex-direction: column-reverse;
   align-items: center;
   justify-content: space-around;
 
