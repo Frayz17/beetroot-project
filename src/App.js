@@ -4,6 +4,7 @@ import Menu from 'modules/Menu';
 import Home from 'routes/Home';
 import Posts from 'routes/Posts';
 import SignIn from 'routes/SignIn';
+import Footer from 'modules/Footer';
 
 export default React.memo(() => (
   <>
@@ -19,6 +20,7 @@ export default React.memo(() => (
         <Home />
       </Route>
     </Switch>
+    <Footer />
   </>
 ));
 
