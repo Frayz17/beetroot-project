@@ -23,12 +23,14 @@ export default React.memo(() => {
     setIsMapOpenFlag(!isMapOpenFlag);
   };
 
+  const copyrightStr = `&copy; ${new Date().getFullYear()}`;
+
   return (
     <Footer>
       <InformationBlock>
         <CopyrightBlock>
           <Typography>
-            &copy; {new Date().getFullYear()}
+            {copyrightStr}
             <br />
             <CopyrightTypography>BetobeCorp</CopyrightTypography>
           </Typography>
