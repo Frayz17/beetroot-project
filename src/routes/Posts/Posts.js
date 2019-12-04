@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Post from 'modules/Post';
 import { TypographyHeader } from 'components/Typography';
 import loadPosts from './loadPosts.js';
+import infinityLoad from './infinityLoad';
 import resetPosts from './resetPosts';
 import { getState } from 'Services/Store';
 
@@ -14,37 +15,19 @@ export default connect((state) => {
   };
 })(
   React.memo(({ postsLength }) => {
-    let { page } = getState().posts;
-
-    const handleLoad = () => {
-      const offsetHeight = document.documentElement.offsetHeight;
-      const innerHeight = window.innerHeight;
-      const scrollTop = document.documentElement.scrollTop;
-
-      if (
-        offsetHeight > innerHeight &&
-        innerHeight + scrollTop === offsetHeight
-      ) {
-        if (page < routesNumber) {
-          loadPosts(++page);
-        }
-      }
-    };
-
     // onMount
     React.useEffect(() => {
-      loadPosts(page);
-      window.addEventListener('scroll', handleLoad);
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+      let { page } = getState().posts;
 
-    // onUnmount
-    React.useEffect(
-      () => () => {
+      loadPosts(page);
+      window.addEventListener('scroll', infinityLoad(page, routesNumber));
+
+      // onUnmount
+      return () => {
         resetPosts();
-        window.removeEventListener('scroll', handleLoad);
-      },
-      [] // eslint-disable-line react-hooks/exhaustive-deps
-    );
+        window.removeEventListener('scroll', infinityLoad(page, routesNumber));
+      };
+    }, []);
 
     return (
       <>
